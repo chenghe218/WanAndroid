@@ -1,5 +1,6 @@
 package com.leo.wan
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.text.TextUtils
 import android.widget.Toast
@@ -35,4 +36,15 @@ fun String.toEncryptionString(): String {
         return ""
     }
     return this.replaceRange(1, 3, "**")
+}
+
+fun ProgressDialog.showDialog(context: Context) {
+    this.apply {
+        setMessage(context.getString(R.string.loading))
+        this.show()
+    }
+}
+
+fun ProgressDialog.dismissDialog() {
+    this.dismiss()
 }

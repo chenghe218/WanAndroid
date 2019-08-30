@@ -76,4 +76,5 @@
     <string name="delete_success">successfully deleted</string>
     <string name="topping">topping</string>
     <string name="search_place">Search within this wechat public number</string>
+    <string name="loading">loading...</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.leo.wan.fragment
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +13,9 @@ import com.leo.wan.activity.TreeActivity
 import com.leo.wan.adapter.TreeAdapter
 import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
+import com.leo.wan.dismissDialog
 import com.leo.wan.model.TreeBean
+import com.leo.wan.showDialog
 import com.leo.wan.toastError
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -28,6 +31,9 @@ import kotlinx.android.synthetic.main.fragment_system.*
 class SystemFragment : Fragment() {
 
     lateinit var treeAdapter: TreeAdapter
+    val dialog: ProgressDialog by lazy {
+        ProgressDialog(context)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         getTreeList()
@@ -43,28 +49,37 @@ class SystemFragment : Fragment() {
                 startActivity(this)
             }
         }
+        refreshLayout.setOnRefreshListener {
+            getTreeList()
+        }
         super.onActivityCreated(savedInstanceState)
     }
 
     private fun getTreeList() {
+        dialog.showDialog(context as Activity)
         NetWorkManager.getNetApi().getTreeList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<BaseBean<List<TreeBean>>> {
-                    override fun onSubscribe(d: Disposable) {
-                    }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseBean<List<TreeBean>>> {
+                override fun onSubscribe(d: Disposable) {
+                }
 
-                    override fun onNext(basaBean: BaseBean<List<TreeBean>>) {
-                        treeAdapter.datas = basaBean.data
+                override fun onNext(basaBean: BaseBean<List<TreeBean>>) {
+                    refreshLayout?.let {
+                        refreshLayout.finishRefresh()
                     }
+                    dialog.dismissDialog()
+                    treeAdapter.datas = basaBean.data
+                }
 
-                    override fun onError(e: Throwable) {
-                        context?.toastError(e)
-                    }
+                override fun onError(e: Throwable) {
+                    dialog.dismissDialog()
+                    context?.toastError(e)
+                }
 
-                    override fun onComplete() {
+                override fun onComplete() {
 
-                    }
-                })
+                }
+            })
     }
 }

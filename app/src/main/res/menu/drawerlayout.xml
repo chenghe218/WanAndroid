@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/drawer_mode"
-        android:icon="@drawable/setting"
+        android:icon="@drawable/ic_night"
         android:title="@string/drawer_mode_day"/>
 
     <item

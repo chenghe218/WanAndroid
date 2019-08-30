@@ -1,5 +1,7 @@
 package com.leo.wan.fragment
 
+import android.app.Activity
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +11,9 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.leo.wan.R
 import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
-import com.leo.wan.model.ProjectTypeBean
+import com.leo.wan.dismissDialog
 import com.leo.wan.model.WeChatTypeBean
+import com.leo.wan.showDialog
 import com.leo.wan.toastError
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -28,6 +31,9 @@ class WeChatFragment : Fragment() {
     var typeList = ArrayList<WeChatTypeBean>()
     var nameList = ArrayList<String?>()
     private val fragmentList = mutableListOf<Fragment>()
+    val dialog: ProgressDialog by lazy {
+        ProgressDialog(context)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         getProjectTypeList()
@@ -49,29 +55,32 @@ class WeChatFragment : Fragment() {
      * 获取公众号分类
      */
     private fun getProjectTypeList() {
+        dialog.showDialog(context as Activity)
         NetWorkManager.getNetApi().getWeChatTypeList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<BaseBean<List<WeChatTypeBean>>> {
-                    override fun onSubscribe(d: Disposable) {
-                    }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseBean<List<WeChatTypeBean>>> {
+                override fun onSubscribe(d: Disposable) {
+                }
 
-                    override fun onNext(baseBean: BaseBean<List<WeChatTypeBean>>) {
-                        typeList = baseBean.data as ArrayList<WeChatTypeBean>
-                        typeList.forEach {
-                            nameList.add(it.name)
-                            fragmentList.add(WeChatListFragment.newInstance(it.id))
-                        }
-                        initView()
+                override fun onNext(baseBean: BaseBean<List<WeChatTypeBean>>) {
+                    dialog.dismissDialog()
+                    typeList = baseBean.data as ArrayList<WeChatTypeBean>
+                    typeList.forEach {
+                        nameList.add(it.name)
+                        fragmentList.add(WeChatListFragment.newInstance(it.id))
                     }
+                    initView()
+                }
 
-                    override fun onError(e: Throwable) {
-                        context?.toastError(e)
-                    }
+                override fun onError(e: Throwable) {
+                    dialog.dismissDialog()
+                    context?.toastError(e)
+                }
 
-                    override fun onComplete() {
+                override fun onComplete() {
 
-                    }
-                })
+                }
+            })
     }
 }

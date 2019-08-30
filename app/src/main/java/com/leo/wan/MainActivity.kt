@@ -39,7 +39,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     private var weChatFragment: WeChatFragment? = null
 
     lateinit var tvCoin: TextView
-    private var mIndex= 0
+    private var mIndex = 0
     private var mode: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +53,8 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         } else {
             currentFragment = mineFragment
             currentFragment?.let {
-                supportFragmentManager.beginTransaction().add(R.id.frameLayout, it, mineFragment?.javaClass?.name).commit()
+                supportFragmentManager.beginTransaction().add(R.id.frameLayout, it, mineFragment?.javaClass?.name)
+                    .commit()
             }
             fragmentList.add(mineFragment!!)
         }

@@ -1,16 +1,15 @@
 package com.leo.wan.activity
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.view.View
-import com.leo.wan.R
+import com.leo.wan.*
 import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
 import com.leo.wan.model.UserBean
-import com.leo.wan.toast
-import com.leo.wan.toastError
 import com.leo.wan.util.SPContent
 import com.leo.wan.util.SPManager
 import io.reactivex.Observer
@@ -21,6 +20,10 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : BaseActivity(), View.OnClickListener {
+
+    val dialog: ProgressDialog by lazy {
+        ProgressDialog(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,8 +38,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         tv_tip_registered.setOnClickListener(this)
     }
 
-    override fun onClick(p0: View?) {
-        when (p0!!.id) {
+    override fun onClick(p0: View) {
+        when (p0.id) {
             R.id.bt_login -> {
                 if (tv_name.text.toString().isEmpty() || tv_pw.text.toString().isEmpty()) {
                     toast(getString(R.string.tip_info))
@@ -50,6 +53,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                     toast(getString(R.string.tip_pw_6))
                     return
                 }
+                dialog.showDialog(this)
                 NetWorkManager.getNetApi().login(tv_name.text.toString(),
                         tv_pw.text.toString())
                         .subscribeOn(Schedulers.io())
@@ -60,6 +64,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                             }
 
                             override fun onNext(userBean: BaseBean<UserBean>) {
+                                dialog.dismissDialog()
                                 toast(getString(R.string.login_success))
                                 SPManager.saveString(this@LoginActivity, SPContent.SP_NAME, userBean.data.username)
                                 SPManager.saveInt(this@LoginActivity, SPContent.SP_ID, userBean.data.id)
@@ -68,6 +73,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                             }
 
                             override fun onError(e: Throwable) {
+                                dialog.dismissDialog()
                                 toastError(e)
                             }
 
@@ -95,6 +101,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                     toast(getString(R.string.tip_pw_error))
                     return
                 }
+                dialog.showDialog(this)
                 NetWorkManager.getNetApi().register(tv_name_registered.text.toString(),
                         tv_pw_registered.text.toString(), tv_pw_registered1.text.toString())
                         .subscribeOn(Schedulers.io())
@@ -105,12 +112,14 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                             }
 
                             override fun onNext(model: BaseBean<Any>) {
+                                dialog.dismissDialog()
                                 toast(getString(R.string.registered_success))
                                 group1.visibility = View.GONE
                                 group.visibility = View.VISIBLE
                             }
 
                             override fun onError(e: Throwable) {
+                                dialog.dismissDialog()
                                 toastError(e)
                             }
 
