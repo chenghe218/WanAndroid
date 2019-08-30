@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_main"
+        android:icon="@drawable/sl_tab_main_main"
+        android:title="@string/menu_main"/>
+
+    <item
+        android:id="@+id/menu_project"
+        android:icon="@drawable/sl_tab_main_project"
+        android:title="@string/menu_project"/>
+
+    <item
+        android:id="@+id/menu_wechat"
+        android:icon="@drawable/sl_tab_main_wechat"
+        android:title="@string/menu_wechat"/>
+
+    <item
+        android:id="@+id/menu_system"
+        android:icon="@drawable/sl_tab_main_system"
+        android:title="@string/menu_system"/>
+
+</menu>

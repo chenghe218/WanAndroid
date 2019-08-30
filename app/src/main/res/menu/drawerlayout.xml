@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<item-->
+        <!--android:id="@+id/drawer_collection"-->
+        <!--android:icon="@drawable/collection"-->
+        <!--android:title="@string/drawer_collection"/>-->
+
+    <item
+        android:id="@+id/drawer_todo"
+        android:icon="@drawable/todo"
+        android:title="@string/drawer_todo"/>
+
+    <item
+        android:id="@+id/drawer_setting"
+        android:icon="@drawable/setting"
+        android:title="@string/drawer_setting"/>
+
+    <item
+        android:id="@+id/drawer_mode"
+        android:icon="@drawable/setting"
+        android:title="@string/drawer_mode_day"/>
+
+    <item
+        android:id="@+id/drawer_aboutUs"
+        android:icon="@drawable/about"
+        android:title="@string/drawer_aboutUs"/>
+
+    <item
+        android:id="@+id/drawer_login_out"
+        android:icon="@drawable/login"
+        android:title="@string/drawer_sign_out"/>
+</menu>
