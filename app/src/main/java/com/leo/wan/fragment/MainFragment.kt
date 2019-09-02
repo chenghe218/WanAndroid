@@ -1,6 +1,7 @@
 package com.leo.wan.fragment
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,8 +13,10 @@ import com.leo.wan.activity.WebActivity
 import com.leo.wan.adapter.ArticleAdapter
 import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
+import com.leo.wan.dismissDialog
 import com.leo.wan.model.ArticeData
 import com.leo.wan.model.Banner
+import com.leo.wan.showDialog
 import com.leo.wan.toastError
 import com.leo.wan.util.GlideImageLoader
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
@@ -38,7 +41,11 @@ class MainFragment : Fragment(), OnBannerListener {
     var bannerTitle = mutableListOf<String>()
     var articleList = ArrayList<ArticeData.ArticleBean>()
     var articleTopList = ArrayList<ArticeData.ArticleBean>()
-    var page: Int = 0
+    var page = 0
+
+    val dialog: ProgressDialog by lazy {
+        ProgressDialog(context)
+    }
 
     lateinit var articleAdapter: ArticleAdapter
 
@@ -169,6 +176,9 @@ class MainFragment : Fragment(), OnBannerListener {
      * 获取文章列表
      */
     private fun getArticleList() {
+        if (page==0){
+            dialog.showDialog(context as Activity)
+        }
         NetWorkManager.getNetApi().getArticleList(page)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -183,6 +193,7 @@ class MainFragment : Fragment(), OnBannerListener {
                         if (page == 0) {
                             articleList.clear()
                             articleList.addAll(articleTopList)
+                            dialog.dismissDialog()
                         }
                         articeData.data.datas?.let { articleList.addAll(it) }
                         articleAdapter.datas = articleList

@@ -18,4 +18,5 @@
     <color name="color_search">#616161</color>
     <color name="color_text_search">#E0E0E0</color>
     <color name="color_hot_search">#E0E0E0</color>
+    <color name="select_white">#494848</color>
 </resources>

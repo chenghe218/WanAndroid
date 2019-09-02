@@ -106,6 +106,13 @@ interface NetApi {
                     @Query("cid") id: Int): Observable<BaseBean<TreeDetailBean>>
 
     /**
+     * 获取导航数据
+     * @return
+     */
+    @GET("navi/json")
+    fun getNavi(): Observable<BaseBean<MutableList<NavigationBean>>>
+
+    /**
      * 新增一个TODO
      * @return
      */

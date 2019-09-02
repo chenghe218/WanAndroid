@@ -2,8 +2,11 @@ package com.leo.wan
 
 import android.app.ProgressDialog
 import android.content.Context
+import android.graphics.Color
 import android.text.TextUtils
 import android.widget.Toast
+import com.leo.wan.util.SPContent
+import com.leo.wan.util.SPManager
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -47,4 +50,20 @@ fun ProgressDialog.showDialog(context: Context) {
 
 fun ProgressDialog.dismissDialog() {
     this.dismiss()
+}
+
+fun Context.randomColor(): Int {
+    val random = Random()
+    //0-190, 如果颜色值过大,就越接近白色,就看不清了,所以需要限定范围
+    var red = random.nextInt(190)
+    var green = random.nextInt(190)
+    var blue = random.nextInt(190)
+    if (SPManager.getBoolean(this,SPContent.SP_MODE,false)) {
+        //150-255
+        red = random.nextInt(105) + 150
+        green = random.nextInt(105) + 150
+        blue = random.nextInt(105) + 150
+    }
+    //使用rgb混合生成一种新的颜色,Color.rgb生成的是一个int数
+    return Color.rgb(red, green, blue)
 }

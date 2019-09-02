@@ -17,6 +17,7 @@ import com.leo.wan.base.NetWorkManager
 import com.leo.wan.model.ArticeData
 import com.leo.wan.model.HotkeyBean
 import com.leo.wan.model.WeChatDetailBean
+import com.leo.wan.randomColor
 import com.leo.wan.toastError
 import com.leo.wan.util.flowlayout.FlowLayout
 import com.leo.wan.util.flowlayout.TagAdapter
@@ -72,7 +73,10 @@ class SearchActivity : BaseActivity() {
             searchView.clearFocus()
             Intent(this, WebActivity::class.java).run {
                 putExtra("url", articleAdapter.datas[position].link)
-                putExtra("title", articleAdapter.datas[position].title?.replace("<em class='highlight'>", "")?.replace("</em>", ""))
+                putExtra(
+                    "title",
+                    articleAdapter.datas[position].title?.replace("<em class='highlight'>", "")?.replace("</em>", "")
+                )
                 startActivity(this)
             }
         }
@@ -155,9 +159,12 @@ class SearchActivity : BaseActivity() {
         val mInflater = LayoutInflater.from(this)
         tagFlowLayout.adapter = object : TagAdapter<String>(hotList) {
             override fun getView(parent: FlowLayout?, position: Int, t: String?): View {
-                val tv = mInflater.inflate(R.layout.item_search,
-                        tagFlowLayout, false) as TextView
+                val tv = mInflater.inflate(
+                    R.layout.item_search,
+                    tagFlowLayout, false
+                ) as TextView
                 tv.text = t
+                tv.setTextColor(randomColor())
                 return tv
             }
         }
@@ -217,53 +224,22 @@ class SearchActivity : BaseActivity() {
     private fun getArticleList() {
         key?.let {
             NetWorkManager.getNetApi().getSearchList(page, it)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : Observer<BaseBean<ArticeData>> {
-                        override fun onSubscribe(d: Disposable) {
-                        }
-
-                        override fun onNext(articeData: BaseBean<ArticeData>) {
-                            layoutHot.visibility = View.GONE
-                            rvData.visibility = View.VISIBLE
-                            searchView.clearFocus()
-                            refreshLayout.finishLoadMore()
-                            refreshLayout.finishRefresh()
-                            articeData.data.datas?.let { articleList.addAll(it) }
-                            articleAdapter.datas = articleList
-                            if (page < articeData.data.pageCount)
-                                refreshLayout.setEnableLoadMore(true) else refreshLayout.setEnableLoadMore(false)
-                        }
-
-                        override fun onError(e: Throwable) {
-                            toastError(e)
-                        }
-
-                        override fun onComplete() {
-
-                        }
-                    })
-        }
-
-    }
-
-    /**
-     * 热门搜索
-     */
-    private fun getHotKeyList() {
-        NetWorkManager.getNetApi().getHotKeyList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<BaseBean<List<HotkeyBean>>> {
+                .subscribe(object : Observer<BaseBean<ArticeData>> {
                     override fun onSubscribe(d: Disposable) {
                     }
 
-                    override fun onNext(basaBean: BaseBean<List<HotkeyBean>>) {
-                        layoutHot.visibility = View.VISIBLE
-                        for (i in 0 until basaBean.data.size) {
-                            hotList.add(basaBean.data[i].name)
-                        }
-                        initTagFlowLayout()
+                    override fun onNext(articeData: BaseBean<ArticeData>) {
+                        layoutHot.visibility = View.GONE
+                        rvData.visibility = View.VISIBLE
+                        searchView.clearFocus()
+                        refreshLayout.finishLoadMore()
+                        refreshLayout.finishRefresh()
+                        articeData.data.datas?.let { articleList.addAll(it) }
+                        articleAdapter.datas = articleList
+                        if (page < articeData.data.pageCount)
+                            refreshLayout.setEnableLoadMore(true) else refreshLayout.setEnableLoadMore(false)
                     }
 
                     override fun onError(e: Throwable) {
@@ -274,6 +250,37 @@ class SearchActivity : BaseActivity() {
 
                     }
                 })
+        }
+
+    }
+
+    /**
+     * 热门搜索
+     */
+    private fun getHotKeyList() {
+        NetWorkManager.getNetApi().getHotKeyList()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseBean<List<HotkeyBean>>> {
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(basaBean: BaseBean<List<HotkeyBean>>) {
+                    layoutHot.visibility = View.VISIBLE
+                    for (i in 0 until basaBean.data.size) {
+                        hotList.add(basaBean.data[i].name)
+                    }
+                    initTagFlowLayout()
+                }
+
+                override fun onError(e: Throwable) {
+                    toastError(e)
+                }
+
+                override fun onComplete() {
+
+                }
+            })
     }
 
     /**
@@ -282,32 +289,32 @@ class SearchActivity : BaseActivity() {
     private fun getWxSearchList() {
         key?.let {
             NetWorkManager.getNetApi().getWxSearchList(wxId, page, it)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : Observer<BaseBean<WeChatDetailBean>> {
-                        override fun onSubscribe(d: Disposable) {
-                        }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Observer<BaseBean<WeChatDetailBean>> {
+                    override fun onSubscribe(d: Disposable) {
+                    }
 
-                        override fun onNext(baseBean: BaseBean<WeChatDetailBean>) {
-                            layoutHot.visibility = View.GONE
-                            rvData.visibility = View.VISIBLE
-                            searchView.clearFocus()
-                            refreshLayout.finishLoadMore()
-                            refreshLayout.finishRefresh()
-                            baseBean.data.datas?.let { wxList.addAll(it) }
-                            weChatDetailAdapter.datas = wxList
-                            if (page < baseBean.data.pageCount)
-                                refreshLayout.setEnableLoadMore(true) else refreshLayout.setEnableLoadMore(false)
-                        }
+                    override fun onNext(baseBean: BaseBean<WeChatDetailBean>) {
+                        layoutHot.visibility = View.GONE
+                        rvData.visibility = View.VISIBLE
+                        searchView.clearFocus()
+                        refreshLayout.finishLoadMore()
+                        refreshLayout.finishRefresh()
+                        baseBean.data.datas?.let { wxList.addAll(it) }
+                        weChatDetailAdapter.datas = wxList
+                        if (page < baseBean.data.pageCount)
+                            refreshLayout.setEnableLoadMore(true) else refreshLayout.setEnableLoadMore(false)
+                    }
 
-                        override fun onError(e: Throwable) {
-                            toastError(e)
-                        }
+                    override fun onError(e: Throwable) {
+                        toastError(e)
+                    }
 
-                        override fun onComplete() {
+                    override fun onComplete() {
 
-                        }
-                    })
+                    }
+                })
         }
 
     }

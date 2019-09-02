@@ -16,8 +16,14 @@
         android:title="@string/menu_wechat"/>
 
     <item
+        android:id="@+id/menu_navigation"
+        android:icon="@drawable/sl_tab_main_navigation"
+        android:title="@string/menu_navigation"/>
+
+    <item
         android:id="@+id/menu_system"
         android:icon="@drawable/sl_tab_main_system"
         android:title="@string/menu_system"/>
+
 
 </menu>

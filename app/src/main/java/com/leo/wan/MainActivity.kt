@@ -15,10 +15,7 @@ import com.leo.wan.activity.*
 import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
 import com.leo.wan.base.SaveCookiesInterceptor
-import com.leo.wan.fragment.MainFragment
-import com.leo.wan.fragment.ProjectFragment
-import com.leo.wan.fragment.SystemFragment
-import com.leo.wan.fragment.WeChatFragment
+import com.leo.wan.fragment.*
 import com.leo.wan.util.SPContent
 import com.leo.wan.util.SPManager
 import io.reactivex.Observer
@@ -37,6 +34,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     private var systemFragment: SystemFragment? = null
     private var projectFragment: ProjectFragment? = null
     private var weChatFragment: WeChatFragment? = null
+    private var navigationFragment: NavigationFragment? = null
 
     lateinit var tvCoin: TextView
     private var mIndex = 0
@@ -152,7 +150,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         }
         projectFragment ?: ProjectFragment().let {
             projectFragment = it
-
         }
         systemFragment ?: SystemFragment().let {
             systemFragment = it
@@ -160,7 +157,9 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         weChatFragment ?: WeChatFragment().let {
             weChatFragment = it
         }
-
+        navigationFragment ?: NavigationFragment().let {
+            navigationFragment = it
+        }
     }
 
 
@@ -187,7 +186,13 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                     return true
                 }
             }
-
+            R.id.menu_navigation -> {
+                if (!p0.isChecked) {
+                    switchFragment(navigationFragment!!)
+                    toolbar.title = getString(R.string.menu_navigation)
+                    return true
+                }
+            }
             R.id.menu_wechat -> {
                 if (!p0.isChecked) {
                     switchFragment(weChatFragment!!)
