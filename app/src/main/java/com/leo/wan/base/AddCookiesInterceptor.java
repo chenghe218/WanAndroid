@@ -3,12 +3,11 @@ package com.leo.wan.base;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-
-import java.io.IOException;
-
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import java.io.IOException;
 
 /**
  * @Description:
@@ -28,12 +27,15 @@ public class AddCookiesInterceptor implements Interceptor {
         Request request = chain.request();
         Request.Builder builder = request.newBuilder();
         String cookie = getCookie(request.url().toString(), request.url().host());
-        if (request.url().toString().contains("lg/todo") ||
-                request.url().toString().contains("lg/coin")) {
+//        if (request.url().toString().contains("lg/todo") ||
+//                request.url().toString().contains("lg/coin") ||
+//                request.url().toString().contains("lg/collect") ||
+//                request.url().toString().contains("lg/uncollect") ||
+//                request.url().toString().contains("article/")) {
             if (!TextUtils.isEmpty(cookie)) {
                 builder.addHeader("Cookie", cookie);
             }
-        }
+        //}
         return chain.proceed(builder.build());
     }
 

@@ -20,17 +20,21 @@ interface NetApi {
      * @return
      */
     @POST("user/register")
-    fun register(@Query("username") name: String,
-                 @Query("password") password: String,
-                 @Query("repassword") repassword: String): Observable<BaseBean<Any>>
+    fun register(
+        @Query("username") name: String,
+        @Query("password") password: String,
+        @Query("repassword") repassword: String
+    ): Observable<BaseBean<Any>>
 
     /**
      * 登录
      * @return
      */
     @POST("user/login")
-    fun login(@Query("username") name: String,
-              @Query("password") password: String): Observable<BaseBean<UserBean>>
+    fun login(
+        @Query("username") name: String,
+        @Query("password") password: String
+    ): Observable<BaseBean<UserBean>>
 
     /**
      * 退出
@@ -65,8 +69,10 @@ interface NetApi {
      * @return
      */
     @POST("article/query/{page}/json")
-    fun getSearchList(@Path("page") value: Int,
-                      @Query("k") word: String): Observable<BaseBean<ArticeData>>
+    fun getSearchList(
+        @Path("page") value: Int,
+        @Query("k") word: String
+    ): Observable<BaseBean<ArticeData>>
 
     /**
      * 热门搜索
@@ -87,8 +93,10 @@ interface NetApi {
      * @return
      */
     @GET("project/list/{page}/json")
-    fun getProjectList(@Path("page") value: Int,
-                       @Query("cid") id: Int): Observable<BaseBean<ProjectBean>>
+    fun getProjectList(
+        @Path("page") value: Int,
+        @Query("cid") id: Int
+    ): Observable<BaseBean<ProjectBean>>
 
     /**
      * 体系分类
@@ -102,8 +110,10 @@ interface NetApi {
      * @return
      */
     @GET("article/list/{page}/json")
-    fun getTreeList(@Path("page") value: Int,
-                    @Query("cid") id: Int): Observable<BaseBean<TreeDetailBean>>
+    fun getTreeList(
+        @Path("page") value: Int,
+        @Query("cid") id: Int
+    ): Observable<BaseBean<TreeDetailBean>>
 
     /**
      * 获取导航数据
@@ -117,32 +127,38 @@ interface NetApi {
      * @return
      */
     @POST("lg/todo/add/json")
-    fun addTodo(@Query("title") title: String,
-                @Query("content") content: String,
-                @Query("date") date: String,
-                @Query("type") type: Int,
-                @Query("priority") priority: Int): Observable<BaseBean<AddTodoBean>>
+    fun addTodo(
+        @Query("title") title: String,
+        @Query("content") content: String,
+        @Query("date") date: String,
+        @Query("type") type: Int,
+        @Query("priority") priority: Int
+    ): Observable<BaseBean<AddTodoBean>>
 
     /**
      * 更新一个TODO
      * @return
      */
     @POST("lg/todo/update/{id}/json")
-    fun modifyTodo(@Path("id") value: Int,
-                   @Query("title") title: String,
-                   @Query("content") content: String,
-                   @Query("date") date: String,
-                   @Query("status") status: Int,
-                   @Query("type") type: Int,
-                   @Query("priority") priority: Int): Observable<BaseBean<Any>>
+    fun modifyTodo(
+        @Path("id") value: Int,
+        @Query("title") title: String,
+        @Query("content") content: String,
+        @Query("date") date: String,
+        @Query("status") status: Int,
+        @Query("type") type: Int,
+        @Query("priority") priority: Int
+    ): Observable<BaseBean<Any>>
 
     /**
      * 更新TODO完成状态
      * @return
      */
     @POST("lg/todo/done/{id}/json")
-    fun modifyTodoStatus(@Path("id") value: Int,
-                         @Query("status") status: Int): Observable<BaseBean<Any>>
+    fun modifyTodoStatus(
+        @Path("id") value: Int,
+        @Query("status") status: Int
+    ): Observable<BaseBean<Any>>
 
     /**
      * 删除一个TODO
@@ -170,17 +186,21 @@ interface NetApi {
      * @return
      */
     @GET("wxarticle/list/{id}/{page}/json")
-    fun getWeChatList(@Path("id") value: Int,
-                      @Path("page") page: Int): Observable<BaseBean<WeChatDetailBean>>
+    fun getWeChatList(
+        @Path("id") value: Int,
+        @Path("page") page: Int
+    ): Observable<BaseBean<WeChatDetailBean>>
 
     /**
      * 公众号搜索
      * @return
      */
     @GET("wxarticle/list/{id}/{page}/json")
-    fun getWxSearchList(@Path("id") value: Int,
-                        @Path("page") page: Int,
-                        @Query("k") word: String): Observable<BaseBean<WeChatDetailBean>>
+    fun getWxSearchList(
+        @Path("id") value: Int,
+        @Path("page") page: Int,
+        @Query("k") word: String
+    ): Observable<BaseBean<WeChatDetailBean>>
 
     /**
      * 获取个人积分
@@ -202,4 +222,35 @@ interface NetApi {
      */
     @GET("coin/rank/{page}/json")
     fun getRankList(@Path("page") page: Int): Observable<BaseBean<RankBean>>
+
+    /**
+     * 获取收藏文章列表
+     * @return
+     */
+    @GET("lg/collect/list/{page}/json")
+    fun getCollectList(@Path("page") page: Int): Observable<BaseBean<CollectionBean>>
+
+    /**
+     * 收藏文章
+     * @return
+     */
+    @POST("lg/collect/{id}/json")
+    fun addCollection(@Path("id") page: Int): Observable<BaseBean<Any>>
+
+    /**
+     * 取消收藏(文章列表内)
+     * @return
+     */
+    @POST("lg/uncollect_originId/{id}/json")
+    fun cancelCollectionByArticleList(@Path("id") page: Int): Observable<BaseBean<Any>>
+
+    /**
+     * 取消收藏(收藏列表内)
+     * @return
+     */
+    @POST("lg/uncollect/{id}/json")
+    fun cancelCollectionByCollectList(
+        @Path("id") page: Int,
+        @Query("originId") originId: Int = -1
+    ): Observable<BaseBean<Any>>
 }

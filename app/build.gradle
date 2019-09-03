@@ -60,11 +60,11 @@ dependencies {
     //标签
     implementation 'com.flyco.labelview:FlycoLabelView_Lib:1.0.2@aar'
 
-    //侧滑删除
-    implementation 'com.tubb.smrv:swipemenu-recyclerview:5.4.0'
-
     //侧滑返回
     implementation 'com.billy.android:smart-swipe:1.0.6'
+
+    //eventBus
+    implementation 'org.greenrobot:eventbus:3.1.1'
 }
 
 repositories {

@@ -6,11 +6,9 @@ import android.graphics.Bitmap
 import android.net.http.SslError
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
 import android.view.ViewGroup
-import android.webkit.SslErrorHandler
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import com.leo.wan.R
 import kotlinx.android.synthetic.main.activity_web.*
 
@@ -37,21 +35,32 @@ class WebActivity : BaseActivity() {
             builtInZoomControls = false
             javaScriptEnabled = true
             domStorageEnabled = true
+            useWideViewPort = true
+            loadWithOverviewMode = true
             cacheMode = WebSettings.LOAD_NO_CACHE
+        }
+        webView.webChromeClient = object : WebChromeClient() {
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                progressBar.progress = newProgress
+                super.onProgressChanged(view, newProgress)
+            }
         }
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 toolbar.title = intent.getStringExtra("title")
+                progressBar.visibility = View.GONE
                 super.onPageFinished(view, url)
             }
 
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
                 toolbar.title = "加载失败"
+                progressBar.visibility = View.GONE
                 handler?.proceed()
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 toolbar.title = "加载中..."
+                progressBar.visibility = View.VISIBLE
                 super.onPageStarted(view, url, favicon)
             }
         }
@@ -65,12 +74,14 @@ class WebActivity : BaseActivity() {
         Intent().run {
             action = Intent.ACTION_SEND
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, getString(
+            putExtra(
+                Intent.EXTRA_TEXT, getString(
                     R.string.share_article_url,
                     getString(R.string.app_name),
                     intent.getStringExtra("title"),
                     intent.getStringExtra("url")
-            ))
+                )
+            )
             startActivity(Intent.createChooser(this, ""))
         }
     }

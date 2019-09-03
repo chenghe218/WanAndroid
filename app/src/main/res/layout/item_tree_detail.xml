@@ -47,6 +47,15 @@
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:layout_goneMarginTop="88dp" />
 
+        <ImageView
+            android:id="@+id/iv_collection"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_collection_nom"
+            app:layout_constraintTop_toTopOf="@id/tv_type"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

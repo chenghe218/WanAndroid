@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.leo.wan.R
 
 /**
- * @Description:
+ * @Description:   悬浮置顶效果
  * @Author:         ch
  * @CreateDate:     2019/9/2 13:42
  */

@@ -17,8 +17,8 @@
             android:id="@+id/tv_topping"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_topping"
             android:layout_marginEnd="8dp"
+            android:background="@drawable/shape_topping"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
             android:text="@string/topping"
@@ -65,13 +65,29 @@
             tools:src="@mipmap/ic_launcher" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_type"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="8dp"
         android:paddingTop="10dp"
-        tools:text="测试/测试" />
+        android:paddingEnd="8dp">
+
+        <TextView
+            android:id="@+id/tv_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="测试/测试" />
+
+
+        <ImageView
+            android:id="@+id/iv_collection"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_collection_nom" />
+
+    </RelativeLayout>
+
 
     <!--<androidx.constraintlayout.widget.ConstraintLayout-->
     <!--android:layout_width="match_parent"-->

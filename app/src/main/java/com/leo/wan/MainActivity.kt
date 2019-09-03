@@ -90,8 +90,20 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         navigationView.menu.findItem(R.id.drawer_mode).title =
             if (mode) getString(R.string.drawer_mode_day) else getString(R.string.drawer_mode_night)
 
+        navigationViewItemSelect()
+    }
+
+    /**
+     * 左侧菜单点击事件
+     */
+    private fun navigationViewItemSelect() {
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
+                R.id.drawer_collection -> {
+                    if (tv_name.text == getString(R.string.login)) toast(getString(R.string.login_un))
+                    else startActivity(Intent(this, CollectionActivity::class.java))
+                    drawerLayout.closeDrawers()
+                }
                 R.id.drawer_todo -> {
                     if (tv_name.text == getString(R.string.login)) toast(getString(R.string.login_un))
                     else startActivity(Intent(this, TodoActivity::class.java))

@@ -7,17 +7,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.leo.wan.R
+import com.leo.wan.*
 import com.leo.wan.activity.WebActivity
 import com.leo.wan.adapter.ArticleAdapter
 import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
-import com.leo.wan.dismissDialog
 import com.leo.wan.model.ArticeData
 import com.leo.wan.model.Banner
-import com.leo.wan.showDialog
-import com.leo.wan.toastError
 import com.leo.wan.util.GlideImageLoader
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
@@ -29,6 +27,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_main.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @Description:
@@ -52,7 +53,13 @@ class MainFragment : Fragment(), OnBannerListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         getBannerList()
         getTopArticleList()
+        EventBus.getDefault().register(this)
         return inflater.inflate(R.layout.fragment_main, null)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        EventBus.getDefault().unregister(this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -67,6 +74,24 @@ class MainFragment : Fragment(), OnBannerListener {
             }
         }
         initRefreshLayout()
+        articleAdapter.listener = {
+            if (articleAdapter.datas[it].collect) {
+                val tipDialog = AlertDialog.Builder(context as Activity).apply {
+                    this.setTitle(getString(R.string.tip))
+                    this.setMessage(getString(R.string.collect_sure))
+                    this.setPositiveButton(getString(R.string.sure)) { _, _ ->
+                        cancelCollect(
+                            it,
+                            articleAdapter.datas[it].id
+                        )
+                    }
+                    this.setNegativeButton(getString(R.string.cancel)) { p0, _ -> p0.dismiss() }
+                }
+                tipDialog.show()
+            } else {
+                addCollect(it, articleAdapter.datas[it].id)
+            }
+        }
     }
 
     /**
@@ -83,7 +108,7 @@ class MainFragment : Fragment(), OnBannerListener {
             setOnRefreshListener {
                 page = 0
                 articleAdapter.datas.clear()
-                getArticleList()
+                getTopArticleList()
             }
         }
     }
@@ -109,6 +134,22 @@ class MainFragment : Fragment(), OnBannerListener {
             putExtra("url", bannerList[position].url)
             putExtra("title", bannerList[position].title)
             startActivity(this)
+        }
+    }
+
+    /**
+     * 收藏页面取消收藏后 主页面也跟随取消收藏(消息发送地址:CollectionActivity.kt)
+     *
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEvent(event: CollectEvent) {
+        if (!articleAdapter.datas.isNullOrEmpty()) {
+            for ((position, dataBean) in articleAdapter.datas.withIndex()) {
+                if (dataBean.id == event.id) {
+                    articleAdapter.datas[position].collect = false
+                    articleAdapter.notifyItemChanged(position)
+                }
+            }
         }
     }
 
@@ -155,6 +196,7 @@ class MainFragment : Fragment(), OnBannerListener {
                 }
 
                 override fun onNext(baseBean: BaseBean<List<ArticeData.ArticleBean>>) {
+                    articleTopList.clear()
                     articleTopList = baseBean.data as ArrayList<ArticeData.ArticleBean>
                     articleTopList.forEach {
                         it.isTop = 1
@@ -176,7 +218,7 @@ class MainFragment : Fragment(), OnBannerListener {
      * 获取文章列表
      */
     private fun getArticleList() {
-        if (page==0){
+        if (page == 0) {
             dialog.showDialog(context as Activity)
         }
         NetWorkManager.getNetApi().getArticleList(page)
@@ -210,5 +252,60 @@ class MainFragment : Fragment(), OnBannerListener {
             })
     }
 
+    /**
+     * 取消收藏
+     */
+    private fun cancelCollect(position: Int, id: Int) {
+        NetWorkManager.getNetApi().cancelCollectionByArticleList(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseBean<Any>> {
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(baseBean: BaseBean<Any>) {
+                    articleAdapter.datas[position].collect = false
+                    articleAdapter.notifyItemChanged(position)
+                    context?.toast(getString(R.string.cancel_success))
+
+                }
+
+                override fun onError(e: Throwable) {
+                    context?.toastError(e)
+                }
+
+                override fun onComplete() {
+
+                }
+            })
+    }
+
+    /**
+     * 添加收藏
+     */
+    private fun addCollect(position: Int, id: Int) {
+        NetWorkManager.getNetApi().addCollection(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseBean<Any>> {
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(baseBean: BaseBean<Any>) {
+                    articleAdapter.datas[position].collect = true
+                    articleAdapter.notifyItemChanged(position)
+                    context?.toast(getString(R.string.collect_success))
+
+                }
+
+                override fun onError(e: Throwable) {
+                    context?.toastError(e)
+                }
+
+                override fun onComplete() {
+
+                }
+            })
+    }
 
 }

@@ -10,7 +10,7 @@
     <string name="coin">Integral:%1$d</string>
     <string name="drawer_coin">Integral</string>
     <string name="ranking_coin">Ranking</string>
-    <string name="drawer_collection">collection</string>
+    <string name="drawer_collection">Collection</string>
     <string name="drawer_todo">TODO</string>
     <string name="drawer_setting">Setting</string>
     <string name="drawer_mode_night">Night mode</string>
@@ -77,4 +77,7 @@
     <string name="topping">topping</string>
     <string name="search_place">Search within this wechat public number</string>
     <string name="loading">loading...</string>
+    <string name="collect_sure">Are you sure you want to cancel your collection?</string>
+    <string name="cancel_success">Cancel success</string>
+    <string name="collect_success">Successful collection</string>
 </resources>

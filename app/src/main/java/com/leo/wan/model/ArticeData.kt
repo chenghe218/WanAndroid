@@ -48,7 +48,7 @@ class ArticeData {
         var author: String? = null
         var chapterId: Int = 0
         var chapterName: String? = null
-        var isCollect: Boolean = false
+        var collect: Boolean = false
         var courseId: Int = 0
         var desc: String? = null
         var envelopePic: String? = null

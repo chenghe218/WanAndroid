@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.leo.wan.CollectEvent
 import com.leo.wan.R
 import com.leo.wan.activity.SearchActivity
 import com.leo.wan.activity.WebActivity
@@ -14,6 +16,7 @@ import com.leo.wan.adapter.WeChatDetailAdapter
 import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
 import com.leo.wan.model.WeChatDetailBean
+import com.leo.wan.toast
 import com.leo.wan.toastError
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
@@ -24,6 +27,9 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_project_list.refreshLayout
 import kotlinx.android.synthetic.main.fragment_project_list.rvData
 import kotlinx.android.synthetic.main.fragment_wechat_list.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @Description:
@@ -38,7 +44,13 @@ class WeChatListFragment : Fragment() {
     var projectList = ArrayList<WeChatDetailBean.DatasBean>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        EventBus.getDefault().register(this)
         return inflater.inflate(R.layout.fragment_wechat_list, null)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        EventBus.getDefault().unregister(this)
     }
 
     companion object {
@@ -72,7 +84,42 @@ class WeChatListFragment : Fragment() {
                 startActivity(this)
             }
         }
+        weChatDetailAdapter.listener = {
+            if (weChatDetailAdapter.datas[it].collect) {
+                val tipDialog = AlertDialog.Builder(context as Activity).apply {
+                    this.setTitle(getString(R.string.tip))
+                    this.setMessage(getString(R.string.collect_sure))
+                    this.setPositiveButton(getString(R.string.sure)) { _, _ ->
+                        cancelCollect(
+                            it,
+                            weChatDetailAdapter.datas[it].id
+                        )
+                    }
+                    this.setNegativeButton(getString(R.string.cancel)) { p0, _ -> p0.dismiss() }
+                }
+                tipDialog.show()
+            } else {
+                addCollect(it, weChatDetailAdapter.datas[it].id)
+            }
+        }
         super.onActivityCreated(savedInstanceState)
+    }
+
+    /**
+     *
+     * 收藏页面取消收藏后 主页面也跟随取消收藏(消息发送地址:CollectionActivity.kt)
+     *
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEvent(event: CollectEvent) {
+        if (!weChatDetailAdapter.datas.isNullOrEmpty()) {
+            for ((position, dataBean) in weChatDetailAdapter.datas.withIndex()) {
+                if (dataBean.id == event.id) {
+                    weChatDetailAdapter.datas[position].collect = false
+                    weChatDetailAdapter.notifyItemChanged(position)
+                }
+            }
+        }
     }
 
     private fun initRefreshLayout() {
@@ -96,34 +143,90 @@ class WeChatListFragment : Fragment() {
      */
     private fun getProjectList() {
         NetWorkManager.getNetApi().getWeChatList(typeId, page)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<BaseBean<WeChatDetailBean>> {
-                    override fun onSubscribe(d: Disposable) {
-                    }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseBean<WeChatDetailBean>> {
+                override fun onSubscribe(d: Disposable) {
+                }
 
-                    override fun onNext(baseBean: BaseBean<WeChatDetailBean>) {
-                        refreshLayout?.let {
-                            it.finishLoadMore()
-                            it.finishRefresh()
-                            if (page == 1) {
-                                projectList.clear()
-                            }
-                            baseBean.data.datas?.let { projectList.addAll(it) }
-                            weChatDetailAdapter.datas = projectList
-                            if (page < baseBean.data.pageCount)
-                                it.setEnableLoadMore(true) else it.setEnableLoadMore(false)
+                override fun onNext(baseBean: BaseBean<WeChatDetailBean>) {
+                    refreshLayout?.let {
+                        it.finishLoadMore()
+                        it.finishRefresh()
+                        if (page == 1) {
+                            projectList.clear()
                         }
-
+                        baseBean.data.datas?.let { projectList.addAll(it) }
+                        weChatDetailAdapter.datas = projectList
+                        if (page < baseBean.data.pageCount)
+                            it.setEnableLoadMore(true) else it.setEnableLoadMore(false)
                     }
 
-                    override fun onError(e: Throwable) {
-                        context?.toastError(e)
-                    }
+                }
 
-                    override fun onComplete() {
+                override fun onError(e: Throwable) {
+                    context?.toastError(e)
+                }
 
-                    }
-                })
+                override fun onComplete() {
+
+                }
+            })
+    }
+
+    /**
+     * 取消收藏
+     */
+    private fun cancelCollect(position: Int, id: Int) {
+        NetWorkManager.getNetApi().cancelCollectionByArticleList(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseBean<Any>> {
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(baseBean: BaseBean<Any>) {
+                    weChatDetailAdapter.datas[position].collect = false
+                    weChatDetailAdapter.notifyItemChanged(position)
+                    context?.toast(getString(R.string.cancel_success))
+
+                }
+
+                override fun onError(e: Throwable) {
+                    context?.toastError(e)
+                }
+
+                override fun onComplete() {
+
+                }
+            })
+    }
+
+    /**
+     * 添加收藏
+     */
+    private fun addCollect(position: Int, id: Int) {
+        NetWorkManager.getNetApi().addCollection(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseBean<Any>> {
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(baseBean: BaseBean<Any>) {
+                    weChatDetailAdapter.datas[position].collect = true
+                    weChatDetailAdapter.notifyItemChanged(position)
+                    context?.toast(getString(R.string.collect_success))
+
+                }
+
+                override fun onError(e: Throwable) {
+                    context?.toastError(e)
+                }
+
+                override fun onComplete() {
+
+                }
+            })
     }
 }

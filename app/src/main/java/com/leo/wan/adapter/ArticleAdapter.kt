@@ -19,8 +19,11 @@ import com.leo.wan.util.recyclerview.ViewHolder
  */
 class ArticleAdapter(context: Context) : BaseRecyclerAdapter<ArticeData.ArticleBean>(context, R.layout.item_article) {
 
+    lateinit var listener: (Int) -> Unit
+
     override fun convert(holder: ViewHolder, articeData: ArticeData.ArticleBean, position: Int) {
         val iv = holder.getView<ImageView>(R.id.iv_pic)
+        val ivCollection = holder.getView<ImageView>(R.id.iv_collection)
         val isTop = holder.getView<TextView>(R.id.tv_topping)
         iv.visibility = View.GONE
         isTop.visibility = View.GONE
@@ -33,5 +36,11 @@ class ArticleAdapter(context: Context) : BaseRecyclerAdapter<ArticeData.ArticleB
         }
         if (articeData.isTop == 1) isTop.visibility = View.VISIBLE
         holder.setText(R.id.tv_type, "${articeData.superChapterName} / ${articeData.chapterName}")
+        if (articeData.collect)
+            ivCollection.setImageResource(R.drawable.ic_collection_select) else
+            ivCollection.setImageResource(R.drawable.ic_collection_nom)
+        ivCollection.setOnClickListener{
+            listener(position)
+        }
     }
 }
