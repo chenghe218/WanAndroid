@@ -2,6 +2,7 @@ package com.leo.wan
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -39,6 +40,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     lateinit var tvCoin: TextView
     private var mIndex = 0
     private var mode: Boolean = false
+    private var firstTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -335,6 +337,23 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
 
                 }
             })
+    }
+
+    /**
+     * 双击退出程序
+     */
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        val secondTime = System.currentTimeMillis()
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (secondTime - firstTime <= 2000) {
+                finish()
+            } else {
+                toast(getString(R.string.exit))
+                firstTime = System.currentTimeMillis()
+            }
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
 }

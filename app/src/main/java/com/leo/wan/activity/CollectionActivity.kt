@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_collection.*
 import org.greenrobot.eventbus.EventBus
 
 /**
- * @Description:    当前只支持收藏首页与公众号内的文章，其他未做支持
+ * @Description:
  * @Author:         ch
  * @CreateDate:     2019/9/3 13:39
  */

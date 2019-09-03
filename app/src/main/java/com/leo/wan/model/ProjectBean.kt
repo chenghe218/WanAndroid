@@ -58,7 +58,7 @@ class ProjectBean {
         val author: String? = null
         val chapterId: Int = 0
         val chapterName: String? = null
-        val collect: Boolean = false
+        var collect: Boolean = false
         val courseId: Int = 0
         val desc: String? = null
         val envelopePic: String? = null

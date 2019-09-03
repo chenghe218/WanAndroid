@@ -6,13 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.leo.wan.CollectEvent
 import com.leo.wan.R
 import com.leo.wan.activity.WebActivity
 import com.leo.wan.adapter.ProjectAdapter
 import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
 import com.leo.wan.model.ProjectBean
+import com.leo.wan.toast
 import com.leo.wan.toastError
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
@@ -21,6 +24,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_project_list.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @Description:
@@ -61,6 +66,24 @@ class ProjectListFragment : Fragment() {
                 startActivity(this)
             }
         }
+        projectAdapter.listener = {
+            if (projectAdapter.datas[it].collect) {
+                val tipDialog = AlertDialog.Builder(context as Activity).apply {
+                    this.setTitle(getString(R.string.tip))
+                    this.setMessage(getString(R.string.collect_sure))
+                    this.setPositiveButton(getString(R.string.sure)) { _, _ ->
+                        cancelCollect(
+                            it,
+                            projectAdapter.datas[it].id
+                        )
+                    }
+                    this.setNegativeButton(getString(R.string.cancel)) { p0, _ -> p0.dismiss() }
+                }
+                tipDialog.show()
+            } else {
+                addCollect(it, projectAdapter.datas[it].id)
+            }
+        }
         super.onActivityCreated(savedInstanceState)
     }
 
@@ -76,6 +99,22 @@ class ProjectListFragment : Fragment() {
                 page = 1
                 projectList.clear()
                 getProjectList()
+            }
+        }
+    }
+
+    /**
+     *
+     * 收藏页面取消收藏后 主页面也跟随取消收藏(消息发送地址:CollectionActivity.kt)
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEvent(event: CollectEvent) {
+        if (!projectAdapter.datas.isNullOrEmpty()) {
+            for ((position, dataBean) in projectAdapter.datas.withIndex()) {
+                if (dataBean.id == event.id) {
+                    projectAdapter.datas[position].collect = false
+                    projectAdapter.notifyItemChanged(position)
+                }
             }
         }
     }
@@ -114,5 +153,61 @@ class ProjectListFragment : Fragment() {
 
                     }
                 })
+    }
+
+    /**
+     * 取消收藏
+     */
+    private fun cancelCollect(position: Int, id: Int) {
+        NetWorkManager.getNetApi().cancelCollectionByArticleList(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseBean<Any>> {
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(baseBean: BaseBean<Any>) {
+                    projectAdapter.datas[position].collect = false
+                    projectAdapter.notifyItemChanged(position)
+                    context?.toast(getString(R.string.cancel_success))
+
+                }
+
+                override fun onError(e: Throwable) {
+                    context?.toastError(e)
+                }
+
+                override fun onComplete() {
+
+                }
+            })
+    }
+
+    /**
+     * 添加收藏
+     */
+    private fun addCollect(position: Int, id: Int) {
+        NetWorkManager.getNetApi().addCollection(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseBean<Any>> {
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(baseBean: BaseBean<Any>) {
+                    projectAdapter.datas[position].collect = true
+                    projectAdapter.notifyItemChanged(position)
+                    context?.toast(getString(R.string.collect_success))
+
+                }
+
+                override fun onError(e: Throwable) {
+                    context?.toastError(e)
+                }
+
+                override fun onComplete() {
+
+                }
+            })
     }
 }

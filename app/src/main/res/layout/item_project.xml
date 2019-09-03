@@ -28,7 +28,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/color_3"
-            android:textSize="16sp"
+            android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/ivPic"
             app:layout_constraintTop_toTopOf="parent"
@@ -42,7 +42,7 @@
             android:ellipsize="end"
             android:maxLines="3"
             android:textColor="@color/color_9"
-            android:textSize="14sp"
+            android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/tvTitle"
             app:layout_constraintTop_toBottomOf="@id/tvTitle"
@@ -63,10 +63,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/color_3"
-            android:textSize="14sp"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@id/ivPic"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="wansdsdjkshd" />
+
+        <ImageView
+            android:id="@+id/iv_collection"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_collection_nom"
+            app:layout_constraintTop_toBottomOf="@id/tvContent"
+            app:layout_constraintBottom_toBottomOf="@id/tvTime"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View

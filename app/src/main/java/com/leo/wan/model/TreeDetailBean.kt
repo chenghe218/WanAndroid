@@ -54,30 +54,30 @@ class TreeDetailBean {
          * zan : 0
          */
 
-        val apkLink: String? = null
-        val author: String? = null
-        val chapterId: Int = 0
-        val chapterName: String? = null
-        val collect: Boolean = false
-        val courseId: Int = 0
-        val desc: String? = null
-        val envelopePic: String? = null
-        val fresh: Boolean = false
-        val id: Int = 0
-        val link: String? = null
-        val niceDate: String? = null
-        val origin: String? = null
-        val prefix: String? = null
-        val projectLink: String? = null
-        val publishTime: Long = 0
-        val superChapterId: Int = 0
-        val superChapterName: String? = null
-        val title: String? = null
-        val type: Int = 0
-        val userId: Int = 0
-        val visible: Int = 0
-        val zan: Int = 0
-        val tags: List<*>? = null
+        var apkLink: String? = null
+        var author: String? = null
+        var chapterId: Int = 0
+        var chapterName: String? = null
+        var collect: Boolean = false
+        var courseId: Int = 0
+        var desc: String? = null
+        var envelopePic: String? = null
+        var fresh: Boolean = false
+        var id: Int = 0
+        var link: String? = null
+        var niceDate: String? = null
+        var origin: String? = null
+        var prefix: String? = null
+        var projectLink: String? = null
+        var publishTime: Long = 0
+        var superChapterId: Int = 0
+        var superChapterName: String? = null
+        var title: String? = null
+        var type: Int = 0
+        var userId: Int = 0
+        var visible: Int = 0
+        var zan: Int = 0
+        var tags: List<*>? = null
     }
 
 }
