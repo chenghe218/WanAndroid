@@ -46,4 +46,8 @@
         <item name="android:windowExitAnimation">@anim/fade_out</item>
     </style>
 
+    <style name="tabLayout">
+        <item name="android:textSize">17sp</item>
+    </style>
+
 </resources>

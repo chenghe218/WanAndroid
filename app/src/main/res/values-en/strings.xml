@@ -72,7 +72,7 @@
     <string name="completed">completed</string>
     <string name="mark_as_completed">mark as completed</string>
     <string name="mark_as_incomplete">mark as incomplete</string>
-    <string name="delete">delete</string>
+    <string name="delete">Delete</string>
     <string name="delete_success">successfully deleted</string>
     <string name="topping">置顶</string>
     <string name="new_">新</string>
@@ -82,4 +82,13 @@
     <string name="cancel_success">Cancel success</string>
     <string name="collect_success">Successful collection</string>
     <string name="exit">Press again to exit the app</string>
+    <string name="collection_article">Article</string>
+    <string name="collection_website">Website</string>
+    <string name="website_name">website name</string>
+    <string name="copy_url">Copy url</string>
+    <string name="open_url">Open through a browser</string>
+    <string name="copy_success">copy success</string>
+    <string name="url">url:</string>
+    <string name="url_tip">Please start with http:// or https://</string>
+    <string name="url_sub_tip">Please fill in the URL correctly</string>
 </resources>

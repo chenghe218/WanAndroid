@@ -81,4 +81,13 @@
     <string name="cancel_success">取消成功</string>
     <string name="collect_success">收藏成功</string>
     <string name="exit">再按一次退出应用</string>
+    <string name="collection_article">文章</string>
+    <string name="collection_website">网站</string>
+    <string name="website_name">网站名称</string>
+    <string name="copy_url">复制网址</string>
+    <string name="open_url">通过浏览器打开</string>
+    <string name="copy_success">复制成功</string>
+    <string name="url">网址:</string>
+    <string name="url_tip">请以http://或https://开头</string>
+    <string name="url_sub_tip">请正确填写网址</string>
 </resources>

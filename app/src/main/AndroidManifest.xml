@@ -15,7 +15,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.CollectionActivity"></activity>
+        <activity
+            android:name=".activity.AllCollectionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CollectionActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.RankingActivity"
             android:screenOrientation="portrait" />

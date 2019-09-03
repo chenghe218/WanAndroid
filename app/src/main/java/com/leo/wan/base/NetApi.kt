@@ -253,4 +253,39 @@ interface NetApi {
         @Path("id") page: Int,
         @Query("originId") originId: Int = -1
     ): Observable<BaseBean<Any>>
+
+    /**
+     * 获取收藏网站列表
+     * @return
+     */
+    @GET("lg/collect/usertools/json")
+    fun getWebSiteList(): Observable<BaseBean<List<WebSiteBean>>>
+
+    /**
+     * 新增收藏网站
+     * @return
+     */
+    @POST("lg/collect/addtool/json")
+    fun addWebSite(
+        @Query("name") name: String,
+        @Query("link") link: String
+    ): Observable<BaseBean<Any>>
+
+    /**
+     * 修改收藏网站
+     * @return
+     */
+    @POST("lg/collect/updatetool/json")
+    fun modifyWebSite(
+        @Query("id") id: Int,
+        @Query("name") name: String,
+        @Query("link") link: String
+    ): Observable<BaseBean<Any>>
+
+    /**
+     * 删除收藏网站
+     * @return
+     */
+    @POST("lg/collect/deletetool/json")
+    fun deleteWebSite(@Query("id") id: Int): Observable<BaseBean<Any>>
 }

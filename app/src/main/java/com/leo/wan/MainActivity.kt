@@ -103,7 +103,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
             when (it.itemId) {
                 R.id.drawer_collection -> {
                     if (tv_name.text == getString(R.string.login)) toast(getString(R.string.login_un))
-                    else startActivity(Intent(this, CollectionActivity::class.java))
+                    else startActivity(Intent(this, AllCollectionActivity::class.java))
                     drawerLayout.closeDrawers()
                 }
                 R.id.drawer_todo -> {
