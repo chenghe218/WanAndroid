@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="8dp"
@@ -26,20 +26,47 @@
             android:textColor="@color/color" />
 
         <TextView
+            android:id="@+id/tv_new"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/shape_new"
+            android:paddingStart="4dp"
+            android:textSize="13sp"
+            android:paddingEnd="4dp"
+            android:text="@string/new_"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/tv_type1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/shape_type"
+            android:paddingStart="4dp"
+            android:textSize="13sp"
+            android:paddingEnd="4dp"
+            android:text="@string/topping"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
             android:id="@+id/tv_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/tv_topping"
             android:textSize="13sp"
             tools:text="测试" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:layout_alignParentEnd="true" />
-    </RelativeLayout>
+            android:textSize="13sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

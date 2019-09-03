@@ -74,6 +74,7 @@
     <string name="delete">删除</string>
     <string name="delete_success">删除成功</string>
     <string name="topping">置顶</string>
+    <string name="new_">新</string>
     <string name="search_place">在此公众号内搜索</string>
     <string name="loading">加载中...</string>
     <string name="collect_sure">确定取消收藏吗？</string>

@@ -25,8 +25,12 @@ class ArticleAdapter(context: Context) : BaseRecyclerAdapter<ArticeData.ArticleB
         val iv = holder.getView<ImageView>(R.id.iv_pic)
         val ivCollection = holder.getView<ImageView>(R.id.iv_collection)
         val isTop = holder.getView<TextView>(R.id.tv_topping)
+        val isNew = holder.getView<TextView>(R.id.tv_new)
+        val tvType = holder.getView<TextView>(R.id.tv_type1)
         iv.visibility = View.GONE
         isTop.visibility = View.GONE
+        isNew.visibility = View.GONE
+        tvType.visibility = View.GONE
         holder.setText(R.id.tv_author, articeData.author)
         holder.setText(R.id.tv_time, articeData.niceDate)
         holder.setText(R.id.tv_title, Html.fromHtml(articeData.title))
@@ -36,10 +40,17 @@ class ArticleAdapter(context: Context) : BaseRecyclerAdapter<ArticeData.ArticleB
         }
         if (articeData.isTop == 1) isTop.visibility = View.VISIBLE
         holder.setText(R.id.tv_type, "${articeData.superChapterName} / ${articeData.chapterName}")
+        if (articeData.fresh) {
+            isNew.visibility = View.VISIBLE
+        }
+        if (!articeData.tags.isNullOrEmpty()) {
+            tvType.visibility = View.VISIBLE
+            tvType.text = articeData.tags?.get(0)?.name
+        }
         if (articeData.collect)
             ivCollection.setImageResource(R.drawable.ic_collection_select) else
             ivCollection.setImageResource(R.drawable.ic_collection_nom)
-        ivCollection.setOnClickListener{
+        ivCollection.setOnClickListener {
             listener(position)
         }
     }

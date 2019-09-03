@@ -52,7 +52,7 @@ class ArticeData {
         var courseId: Int = 0
         var desc: String? = null
         var envelopePic: String? = null
-        var isFresh: Boolean = false
+        var fresh: Boolean = false
         var id: Int = 0
         var link: String? = null
         var niceDate: String? = null

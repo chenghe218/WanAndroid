@@ -74,7 +74,8 @@
     <string name="mark_as_incomplete">mark as incomplete</string>
     <string name="delete">delete</string>
     <string name="delete_success">successfully deleted</string>
-    <string name="topping">topping</string>
+    <string name="topping">置顶</string>
+    <string name="new_">新</string>
     <string name="search_place">Search within this wechat public number</string>
     <string name="loading">loading...</string>
     <string name="collect_sure">Are you sure you want to cancel your collection?</string>
