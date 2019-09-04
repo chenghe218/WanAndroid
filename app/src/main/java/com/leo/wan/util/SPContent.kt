@@ -11,4 +11,6 @@ object SPContent {
     val SP_NO = "no"
     val SP_WIFI ="wifi"
     val SP_MODE = "mode"
+    val SP_REMNAME ="remname"
+    val SP_REMPW = "rempw"
 }

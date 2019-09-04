@@ -8,16 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.leo.wan.CollectEvent
-import com.leo.wan.R
+import com.leo.wan.*
 import com.leo.wan.activity.SearchActivity
 import com.leo.wan.activity.WebActivity
 import com.leo.wan.adapter.WeChatDetailAdapter
 import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
 import com.leo.wan.model.WeChatDetailBean
-import com.leo.wan.toast
-import com.leo.wan.toastError
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import io.reactivex.Observer
@@ -107,7 +104,7 @@ class WeChatListFragment : Fragment() {
 
     /**
      *
-     * 收藏页面取消收藏后 主页面也跟随取消收藏(消息发送地址:CollectionActivity.kt)
+     * 收藏页面取消收藏后 主页面也跟随取消收藏(消息发送地址:ArticleCollectionFragment.kt)
      *
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -118,6 +115,25 @@ class WeChatListFragment : Fragment() {
                     weChatDetailAdapter.datas[position].collect = false
                     weChatDetailAdapter.notifyItemChanged(position)
                 }
+            }
+        }
+    }
+
+    /**
+     * 登录及退出后修改收藏信息(消息发送地址:MainActivity.kt、LoginActivity.kt)
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onLoginEvent(event: LoginEvent) {
+        if (!weChatDetailAdapter.datas.isNullOrEmpty()) {
+            if (!event.isLogin) {
+                weChatDetailAdapter.datas.forEach {
+                    it.collect = false
+                    weChatDetailAdapter.notifyDataSetChanged()
+                }
+            } else {
+                page = 1
+                projectList.clear()
+                getProjectList()
             }
         }
     }

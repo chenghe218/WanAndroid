@@ -210,6 +210,13 @@ interface NetApi {
     fun getcount(): Observable<BaseBean<Int>>
 
     /**
+     * 获取个人积分
+     * @return
+     */
+    @GET("lg/coin/userinfo/json")
+    fun getCount(): Observable<BaseBean<CoinBean>>
+
+    /**
      * 获取个人积分列表
      * @return
      */

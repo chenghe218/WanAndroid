@@ -17,6 +17,7 @@ import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
 import com.leo.wan.base.SaveCookiesInterceptor
 import com.leo.wan.fragment.*
+import com.leo.wan.model.CoinBean
 import com.leo.wan.util.SPContent
 import com.leo.wan.util.SPManager
 import io.reactivex.Observer
@@ -26,6 +27,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.head_drawer_layout.*
 import kotlinx.android.synthetic.main.head_drawer_layout.view.*
+import org.greenrobot.eventbus.EventBus
 
 class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -83,9 +85,11 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         tvCoin = navigationView.getHeaderView(0).tv_coin
         if (name.isNotEmpty()) {
             navigationView.getHeaderView(0).tv_name.text = name
+            navigationView.menu.findItem(R.id.drawer_login_out).isVisible = true
             getCoin()
         } else {
-            tvCoin.text = getString(R.string.coin, 0)
+            tvCoin.text = getString(R.string.coin_null)
+            navigationView.menu.findItem(R.id.drawer_login_out).isVisible = false
         }
         mode = SPManager.getBoolean(applicationContext, SPContent.SP_MODE, false)
 
@@ -102,13 +106,17 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.drawer_collection -> {
-                    if (tv_name.text == getString(R.string.login)) toast(getString(R.string.login_un))
-                    else startActivity(Intent(this, AllCollectionActivity::class.java))
+                    if (tv_name.text == getString(R.string.login)) {
+                        toast(getString(R.string.login_un))
+                        gotoLogin()
+                    } else startActivity(Intent(this, AllCollectionActivity::class.java))
                     drawerLayout.closeDrawers()
                 }
                 R.id.drawer_todo -> {
-                    if (tv_name.text == getString(R.string.login)) toast(getString(R.string.login_un))
-                    else startActivity(Intent(this, TodoActivity::class.java))
+                    if (tv_name.text == getString(R.string.login)) {
+                        toast(getString(R.string.login_un))
+                        gotoLogin()
+                    } else startActivity(Intent(this, TodoActivity::class.java))
                     drawerLayout.closeDrawers()
                 }
                 R.id.drawer_setting -> {
@@ -246,7 +254,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
      */
     fun toLogin(view: View) {
         if (tv_name.text == getString(R.string.login)) {
-            startActivityForResult(Intent(this@MainActivity, LoginActivity::class.java), 0x123)
+            gotoLogin()
             drawerLayout.closeDrawers()
         }
     }
@@ -263,6 +271,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
             drawerLayout.closeDrawers()
         } else {
             toast(getString(R.string.login_un))
+            gotoLogin()
         }
     }
 
@@ -275,6 +284,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                     if (name.isNotEmpty())
                         tv_name.text = name
                     getCoin()
+                    navigationView.menu.findItem(R.id.drawer_login_out).isVisible = true
                 }
             }
         }
@@ -284,16 +294,16 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
      * 获取个人积分
      */
     private fun getCoin() {
-        NetWorkManager.getNetApi().getcount()
+        NetWorkManager.getNetApi().getCount()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<BaseBean<Int>> {
+            .subscribe(object : Observer<BaseBean<CoinBean>> {
                 override fun onSubscribe(d: Disposable) {
 
                 }
 
-                override fun onNext(baseBean: BaseBean<Int>) {
-                    tvCoin.text = getString(R.string.coin, baseBean.data)
+                override fun onNext(baseBean: BaseBean<CoinBean>) {
+                    tvCoin.text = getString(R.string.coin, baseBean.data.coinCount, baseBean.data.rank)
                 }
 
                 override fun onError(e: Throwable) {
@@ -324,8 +334,10 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                     SPManager.saveInt(this@MainActivity, SPContent.SP_ID, -1)
                     SPManager.saveBoolean(this@MainActivity, SPContent.SP_WIFI, false)
                     SaveCookiesInterceptor.clearCookie(this@MainActivity)
-                    tvCoin.text = getString(R.string.coin, 0)
+                    tvCoin.text = getString(R.string.coin_null)
                     tv_name.text = getString(R.string.login)
+                    EventBus.getDefault().post(LoginEvent(false))
+                    navigationView.menu.findItem(R.id.drawer_login_out).isVisible = false
                     drawerLayout.closeDrawers()
                 }
 
@@ -337,6 +349,10 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
 
                 }
             })
+    }
+
+    private fun gotoLogin() {
+        startActivityForResult(Intent(this@MainActivity, LoginActivity::class.java), 0x123)
     }
 
     /**

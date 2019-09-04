@@ -8,15 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.leo.wan.CollectEvent
-import com.leo.wan.R
+import com.leo.wan.*
 import com.leo.wan.activity.WebActivity
 import com.leo.wan.adapter.ProjectAdapter
 import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
 import com.leo.wan.model.ProjectBean
-import com.leo.wan.toast
-import com.leo.wan.toastError
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import io.reactivex.Observer
@@ -24,6 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_project_list.*
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -40,7 +38,13 @@ class ProjectListFragment : Fragment() {
     var projectList = ArrayList<ProjectBean.DataBean>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        EventBus.getDefault().register(this)
         return inflater.inflate(R.layout.fragment_project_list, null)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        EventBus.getDefault().unregister(this)
     }
 
     companion object {
@@ -105,7 +109,7 @@ class ProjectListFragment : Fragment() {
 
     /**
      *
-     * 收藏页面取消收藏后 主页面也跟随取消收藏(消息发送地址:CollectionActivity.kt)
+     * 收藏页面取消收藏后 主页面也跟随取消收藏(消息发送地址:ArticleCollectionFragment.kt)
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: CollectEvent) {
@@ -115,6 +119,25 @@ class ProjectListFragment : Fragment() {
                     projectAdapter.datas[position].collect = false
                     projectAdapter.notifyItemChanged(position)
                 }
+            }
+        }
+    }
+
+    /**
+     * 登录及退出后修改收藏信息(消息发送地址:MainActivity.kt、LoginActivity.kt)
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onLoginEvent(event: LoginEvent) {
+        if (!projectAdapter.datas.isNullOrEmpty()) {
+            if (!event.isLogin) {
+                projectAdapter.datas.forEach {
+                    it.collect = false
+                    projectAdapter.notifyDataSetChanged()
+                }
+            } else {
+                page = 1
+                projectList.clear()
+                getProjectList()
             }
         }
     }

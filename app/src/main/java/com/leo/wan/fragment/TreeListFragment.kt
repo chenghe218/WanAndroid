@@ -9,15 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.leo.wan.CollectEvent
-import com.leo.wan.R
+import com.leo.wan.*
 import com.leo.wan.activity.WebActivity
 import com.leo.wan.adapter.TreeDetailAdapter
 import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
 import com.leo.wan.model.TreeDetailBean
-import com.leo.wan.toast
-import com.leo.wan.toastError
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import io.reactivex.Observer
@@ -107,7 +104,7 @@ class TreeListFragment : Fragment() {
 
     /**
      *
-     * 收藏页面取消收藏后 主页面也跟随取消收藏(消息发送地址:CollectionActivity.kt)
+     * 收藏页面取消收藏后 主页面也跟随取消收藏(消息发送地址:ArticleCollectionFragment.kt)
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: CollectEvent) {
@@ -117,6 +114,25 @@ class TreeListFragment : Fragment() {
                     treeDetailAdapter.datas[position].collect = false
                     treeDetailAdapter.notifyItemChanged(position)
                 }
+            }
+        }
+    }
+
+    /**
+     * 登录及退出后修改收藏信息(消息发送地址:MainActivity.kt、LoginActivity.kt)
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onLoginEvent(event: LoginEvent) {
+        if (!treeDetailAdapter.datas.isNullOrEmpty()) {
+            if (!event.isLogin) {
+                treeDetailAdapter.datas.forEach {
+                    it.collect = false
+                    treeDetailAdapter.notifyDataSetChanged()
+                }
+            } else {
+                page = 0
+                projectList.clear()
+                getTreeList()
             }
         }
     }

@@ -138,8 +138,7 @@ class MainFragment : Fragment(), OnBannerListener {
     }
 
     /**
-     * 收藏页面取消收藏后 主页面也跟随取消收藏(消息发送地址:CollectionActivity.kt)
-     *
+     * 收藏页面取消收藏后 主页面也跟随取消收藏(消息发送地址:ArticleCollectionFragment.kt)
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: CollectEvent) {
@@ -149,6 +148,25 @@ class MainFragment : Fragment(), OnBannerListener {
                     articleAdapter.datas[position].collect = false
                     articleAdapter.notifyItemChanged(position)
                 }
+            }
+        }
+    }
+
+    /**
+     * 登录及退出后修改收藏信息(消息发送地址:MainActivity.kt、LoginActivity.kt)
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onLoginEvent(event: LoginEvent) {
+        if (!articleAdapter.datas.isNullOrEmpty()) {
+            if (!event.isLogin) {
+                articleAdapter.datas.forEach {
+                    it.collect = false
+                    articleAdapter.notifyDataSetChanged()
+                }
+            } else {
+                page = 0
+                articleAdapter.datas.clear()
+                getTopArticleList()
             }
         }
     }

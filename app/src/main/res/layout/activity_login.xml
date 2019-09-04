@@ -56,6 +56,15 @@
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remember"
+        android:textColor="@color/color_6"
+        app:layout_constraintStart_toStartOf="@id/layout_pw"
+        app:layout_constraintTop_toBottomOf="@id/layout_pw" />
+
     <Button
         android:id="@+id/bt_login"
         android:layout_width="match_parent"
@@ -84,7 +93,7 @@
         android:layout_height="wrap_content"
         android:visibility="visible"
         app:constraint_referenced_ids="layout_name,layout_pw,
-        bt_login,tv_tip" />
+        bt_login,tv_tip,checkbox" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group1"

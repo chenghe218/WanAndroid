@@ -6,7 +6,8 @@
     <string name="menu_system">体系</string>
     <string name="menu_wechat">公众号</string>
     <string name="menu_navigation">导航</string>
-    <string name="coin">积分:%1$d</string>
+    <string name="coin">积分:%1$d(当前排名:%2$d)</string>
+    <string name="coin_null">积分:(登录后可见)</string>
     <string name="drawer_coin">积分</string>
     <string name="ranking_coin">积分榜</string>
     <string name="drawer_collection">收藏</string>
@@ -23,6 +24,7 @@
     <string name="login_pw_sure">确认密码</string>
     <string name="no_num">还没有账号？去注册</string>
     <string name="is_num">已有账号？去登录</string>
+    <string name="remember">记住用户名和密码</string>
     <string name="tip">提示</string>
     <string name="sign_out_sure">您确定退出登录吗?</string>
     <string name="sure">确定</string>
@@ -34,7 +36,7 @@
     <string name="login_success">登录成功</string>
     <string name="registered_success">注册成功</string>
     <string name="sign_out_success">您已退出登录</string>
-    <string name="login_un">您还未登录</string>
+    <string name="login_un">请先登录</string>
     <string name="choose_language">选择语言</string>
     <string name="simplified_chinese">简体中文</string>
     <string name="english">English</string>
