@@ -4,6 +4,9 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.graphics.Color
 import android.text.TextUtils
+import android.view.Gravity
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import com.leo.wan.util.SPContent
 import com.leo.wan.util.SPManager
@@ -17,7 +20,7 @@ import java.util.*
  */
 
 fun Context.toast(message: String) {
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    MyDialog(this).showDialog(message)
 }
 
 fun Context.toastError(e: Throwable) {
@@ -58,7 +61,7 @@ fun Context.randomColor(): Int {
     var red = random.nextInt(190)
     var green = random.nextInt(190)
     var blue = random.nextInt(190)
-    if (SPManager.getBoolean(this,SPContent.SP_MODE,false)) {
+    if (SPManager.getBoolean(this, SPContent.SP_MODE, false)) {
         //150-255
         red = random.nextInt(105) + 150
         green = random.nextInt(105) + 150
@@ -66,4 +69,20 @@ fun Context.randomColor(): Int {
     }
     //使用rgb混合生成一种新的颜色,Color.rgb生成的是一个int数
     return Color.rgb(red, green, blue)
+}
+
+class MyDialog(context: Context) : Toast(context) {
+
+    var mContext: Context = context
+
+    fun showDialog(text: String) {
+        MyDialog(mContext).apply {
+            view = View.inflate(mContext, R.layout.my_toast, null)
+            setGravity(Gravity.CENTER, 0, 0)
+            val textView = view.findViewById<TextView>(R.id.tv_text)
+            textView.text = text
+            duration = LENGTH_SHORT
+            show()
+        }
+    }
 }

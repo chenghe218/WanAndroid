@@ -21,10 +21,11 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabTextAppearance="@style/tabLayout"
-            app:tabTextColor="@color/title_white_"
+            android:layout_marginEnd="60dp"
+            app:tabRippleColor="@android:color/transparent"
             app:tabSelectedTextColor="@color/title_white"
-            android:layout_marginEnd="60dp"/>
+            app:tabTextAppearance="@style/tabLayout"
+            app:tabTextColor="@color/title_white_" />
 
     </androidx.appcompat.widget.Toolbar>
 

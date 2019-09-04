@@ -67,7 +67,7 @@ class WebCollectionFragment : Fragment() {
                 copyListener = {
                     val cm = context?.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?
                     val mClipData = ClipData.newPlainText("Label", webSiteAdapter.datas[position].link)
-                    cm!!.setPrimaryClip(mClipData)
+                    cm!!.primaryClip = mClipData
                     context?.toast(getString(R.string.copy_success))
                 }
                 modifyListener = {
