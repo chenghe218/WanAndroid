@@ -40,6 +40,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     private var navigationFragment: NavigationFragment? = null
 
     lateinit var tvCoin: TextView
+    lateinit var tvRanking: TextView
     private var mIndex = 0
     private var mode: Boolean = false
     private var firstTime: Long = 0
@@ -83,12 +84,14 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
 
         val name = SPManager.getString(this, SPContent.SP_NAME, "")
         tvCoin = navigationView.getHeaderView(0).tv_coin
+        tvRanking = navigationView.getHeaderView(0).tv_Rank
         if (name.isNotEmpty()) {
             navigationView.getHeaderView(0).tv_name.text = name
             navigationView.menu.findItem(R.id.drawer_login_out).isVisible = true
             getCoin()
         } else {
             tvCoin.text = getString(R.string.coin_null)
+            tvRanking.text = getString(R.string.rank_null)
             navigationView.menu.findItem(R.id.drawer_login_out).isVisible = false
         }
         mode = SPManager.getBoolean(applicationContext, SPContent.SP_MODE, false)
@@ -260,7 +263,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     }
 
     /**
-     * 积分榜
+     * 个人积分榜
      */
     fun toRank(view: View) {
         if (tv_name.text != getString(R.string.login)) {
@@ -273,6 +276,16 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
             toast(getString(R.string.login_un))
             gotoLogin()
         }
+    }
+
+    /**
+     * 总积分榜
+     */
+    fun toAllRank(view: View) {
+        Intent(this, RankingActivity::class.java).run {
+            startActivity(this)
+        }
+        drawerLayout.closeDrawers()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -303,7 +316,8 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                 }
 
                 override fun onNext(baseBean: BaseBean<CoinBean>) {
-                    tvCoin.text = getString(R.string.coin, baseBean.data.coinCount, baseBean.data.rank)
+                    tvCoin.text = getString(R.string.coin, baseBean.data.coinCount)
+                    tvRanking.text = getString(R.string.rank, baseBean.data.rank)
                 }
 
                 override fun onError(e: Throwable) {
@@ -335,6 +349,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                     SPManager.saveBoolean(this@MainActivity, SPContent.SP_WIFI, false)
                     SaveCookiesInterceptor.clearCookie(this@MainActivity)
                     tvCoin.text = getString(R.string.coin_null)
+                    tvRanking.text = getString(R.string.rank_null)
                     tv_name.text = getString(R.string.login)
                     EventBus.getDefault().post(LoginEvent(false))
                     navigationView.menu.findItem(R.id.drawer_login_out).isVisible = false

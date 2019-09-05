@@ -5,8 +5,10 @@
     <string name="menu_project">项目</string>
     <string name="menu_system">体系</string>
     <string name="menu_wechat">公众号</string>
-    <string name="coin">积分:%1$d(当前排名:%2$d)</string>
+    <string name="coin">积分:%1$d</string>
     <string name="coin_null">积分:(登录后可见)</string>
+    <string name="rank">排名:%1$d</string>
+    <string name="rank_null">排名:(登录后可见)</string>
     <string name="drawer_coin">积分</string>
     <string name="ranking_coin">积分榜</string>
     <string name="menu_navigation">导航</string>

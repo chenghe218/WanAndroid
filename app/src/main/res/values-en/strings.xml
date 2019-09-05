@@ -7,8 +7,10 @@
     <string name="menu_wechat">WeChat</string>
     <string name="menu_system">System</string>
     <string name="menu_navigation">Navigation</string>
-    <string name="coin">Integral:%1$d(Current ranking:%2$d)</string>
+    <string name="coin">Integral:%1$d</string>
     <string name="coin_null">Integral:(Visible after login)</string>
+    <string name="rank">Ranking:%1$d</string>
+    <string name="rank_null">Ranking:(Visible after login)</string>
     <string name="drawer_coin">Integral</string>
     <string name="ranking_coin">Ranking</string>
     <string name="drawer_collection">Collection</string>

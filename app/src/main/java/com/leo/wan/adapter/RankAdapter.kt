@@ -29,7 +29,7 @@ class RankAdapter(context: Context) : BaseRecyclerAdapter<RankBean.DataBean>(con
         tvNo.text = "${position.plus(1)}"
         holder.setText(R.id.tv_name, dataBean.username)
         holder.setText(R.id.tv_integral, dataBean.coinCount.toString())
-        if (isMe.toEncryptionString() == dataBean.username) labelView.visibility = View.VISIBLE
+        if (isMe.isNotEmpty() && isMe.toEncryptionString() == dataBean.username) labelView.visibility = View.VISIBLE
         else labelView.visibility = View.GONE
         when (position.plus(1)) {
             1 ->
