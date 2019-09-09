@@ -202,12 +202,12 @@ interface NetApi {
         @Query("k") word: String
     ): Observable<BaseBean<WeChatDetailBean>>
 
-    /**
-     * 获取个人积分
-     * @return
-     */
-    @GET("lg/coin/getcount/json")
-    fun getcount(): Observable<BaseBean<Int>>
+//    /**
+//     * 获取个人积分
+//     * @return
+//     */
+//    @GET("lg/coin/getcount/json")
+//    fun getcount(): Observable<BaseBean<Int>>
 
     /**
      * 获取个人积分

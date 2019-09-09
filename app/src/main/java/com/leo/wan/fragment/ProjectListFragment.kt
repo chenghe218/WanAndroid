@@ -8,9 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.leo.wan.*
 import com.leo.wan.activity.WebActivity
-import com.leo.wan.adapter.ProjectAdapter
+import com.leo.wan.adapter.Project2Adapter
 import com.leo.wan.base.BaseBean
 import com.leo.wan.base.NetWorkManager
 import com.leo.wan.model.ProjectBean
@@ -34,10 +35,14 @@ class ProjectListFragment : Fragment() {
 
     private var typeId: Int = 0
     var page: Int = 1
-    lateinit var projectAdapter: ProjectAdapter
+    lateinit var projectAdapter: Project2Adapter
     var projectList = ArrayList<ProjectBean.DataBean>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         EventBus.getDefault().register(this)
         return inflater.inflate(R.layout.fragment_project_list, null)
     }
@@ -59,8 +64,14 @@ class ProjectListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         initRefreshLayout()
-        projectAdapter = ProjectAdapter(context as Activity)
+        projectAdapter = Project2Adapter(context as Activity)
+        val manager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
+            //gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+        }
+        //manager.gapStrategy=StaggeredGridLayoutManager.GAP_HANDLING_NONE
+        rvData.layoutManager = manager
         rvData.adapter = projectAdapter
+        rvData.itemAnimator = null
         typeId = arguments?.getInt("id", 0)!!
         getProjectList()
         projectAdapter.setOnItemClickListener { _, _, position ->
@@ -101,7 +112,6 @@ class ProjectListFragment : Fragment() {
             }
             setOnRefreshListener {
                 page = 1
-                projectList.clear()
                 getProjectList()
             }
         }
@@ -147,35 +157,35 @@ class ProjectListFragment : Fragment() {
      */
     private fun getProjectList() {
         NetWorkManager.getNetApi().getProjectList(page, typeId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<BaseBean<ProjectBean>> {
-                    override fun onSubscribe(d: Disposable) {
-                    }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseBean<ProjectBean>> {
+                override fun onSubscribe(d: Disposable) {
+                }
 
-                    override fun onNext(baseBean: BaseBean<ProjectBean>) {
-                        refreshLayout?.let {
-                            it.finishLoadMore()
-                            it.finishRefresh()
-                            if (page == 1) {
-                                projectList.clear()
-                            }
-                            baseBean.data.datas?.let { projectList.addAll(it) }
-                            projectAdapter.datas = projectList
-                            if (page < baseBean.data.pageCount)
-                                it.setEnableLoadMore(true) else it.setEnableLoadMore(false)
+                override fun onNext(baseBean: BaseBean<ProjectBean>) {
+                    refreshLayout?.let {
+                        it.finishLoadMore()
+                        it.finishRefresh()
+                        if (page == 1) {
+                            projectList.clear()
                         }
-
+                        baseBean.data.datas?.let { projectList.addAll(it) }
+                        projectAdapter.datas = projectList
+                        if (page < baseBean.data.pageCount)
+                            it.setEnableLoadMore(true) else it.setEnableLoadMore(false)
                     }
 
-                    override fun onError(e: Throwable) {
-                        context?.toastError(e)
-                    }
+                }
 
-                    override fun onComplete() {
+                override fun onError(e: Throwable) {
+                    context?.toastError(e)
+                }
 
-                    }
-                })
+                override fun onComplete() {
+
+                }
+            })
     }
 
     /**

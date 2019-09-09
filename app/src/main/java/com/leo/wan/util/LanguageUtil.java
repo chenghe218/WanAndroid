@@ -19,7 +19,7 @@ public class LanguageUtil {
     /**
      * 中文
      */
-    public static final Locale LOCALE_CHINESE = Locale.CHINESE;
+    public static final Locale LOCALE_CHINESE = Locale.getDefault();
     /**
      * 英文
      */
@@ -37,7 +37,7 @@ public class LanguageUtil {
     }
 
 
-    private static void setLocale(Context pContext, Locale pUserLocale) {
+    public static void setLocale(Context pContext, Locale pUserLocale) {
         SharedPreferences spLocal = pContext.getSharedPreferences(LOCALE_SP, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = spLocal.edit();
         String json = new Gson().toJson(pUserLocale);

@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.graphics.Color
 import android.text.TextUtils
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
@@ -19,6 +20,8 @@ import java.util.*
  * @CreateDate:     2019/8/14 15:26
  */
 
+const val EmptyUrl= "https://wanandroid.com/resources/image/pc/default_project_img.jpg"
+
 fun Context.toast(message: String) {
     MyDialog(this).showDialog(message)
 }
@@ -27,6 +30,14 @@ fun Context.toastError(e: Throwable) {
     e.message?.let {
         toast(it)
     }
+}
+
+fun Int.dip2px(context: Context): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this.toFloat(),
+        context.resources.displayMetrics
+    ).toInt()
 }
 
 fun Long.toStringDate(pattern: String): String {

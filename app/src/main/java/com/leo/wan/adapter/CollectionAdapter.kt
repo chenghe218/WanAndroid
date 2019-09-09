@@ -5,8 +5,11 @@ import android.text.Html
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.leo.wan.EmptyUrl
 import com.leo.wan.R
 import com.leo.wan.model.CollectionBean
+import com.leo.wan.util.SPContent
+import com.leo.wan.util.SPManager
 import com.leo.wan.util.recyclerview.BaseRecyclerAdapter
 import com.leo.wan.util.recyclerview.ViewHolder
 
@@ -28,12 +31,13 @@ class CollectionAdapter(context: Context) :
         ivPic.visibility = View.GONE
         if (!dataBean.envelopePic.isNullOrEmpty()) {
             ivPic.visibility = View.VISIBLE
-            Glide.with(mContext).load(dataBean.envelopePic).into(ivPic)
+            if (!SPManager.getBoolean(mContext, SPContent.SP_WIFI, false))
+                Glide.with(mContext).load(dataBean.envelopePic).into(ivPic) else
+                Glide.with(mContext).load(EmptyUrl).into(ivPic)
         }
         holder.setText(R.id.tv_type, dataBean.chapterName)
         holder.getView<ImageView>(R.id.iv_collection).setOnClickListener {
             listener(position)
         }
-
     }
 }

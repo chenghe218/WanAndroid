@@ -52,7 +52,7 @@ class ArticleCollectionFragment : Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         rvData.adapter = collectionAdapter
-        rvData.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
+        //rvData.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         initRefreshLayout()
         collectionAdapter.setOnItemClickListener { _, _, position ->
             Intent(context, WebActivity::class.java).run {

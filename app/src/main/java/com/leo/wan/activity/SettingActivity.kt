@@ -31,9 +31,9 @@ class SettingActivity : BaseActivity(), View.OnClickListener {
         language.setOnClickListener(this)
         checkbox.setOnCheckedChangeListener { _, b ->
             if (b) {
-                SPManager.saveBoolean(this, SPContent.SP_WIFI, false)
-            } else {
                 SPManager.saveBoolean(this, SPContent.SP_WIFI, true)
+            } else {
+                SPManager.saveBoolean(this, SPContent.SP_WIFI, false)
             }
         }
     }
@@ -56,7 +56,6 @@ class SettingActivity : BaseActivity(), View.OnClickListener {
                     this.setTitle(getString(R.string.choose_language))
                     this.setSingleChoiceItems(items, SPManager.getInt(this@SettingActivity, SPContent.SP_NO, 0)) { _, p1 ->
                         nex = p1
-                        SPManager.saveInt(this@SettingActivity, SPContent.SP_NO, nex)
                     }
                     this.setPositiveButton(getString(R.string.sure)) { _, _ ->
                         when (nex) {
@@ -77,7 +76,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener {
                                 }
                             }
                         }
-
+                        SPManager.saveInt(this@SettingActivity, SPContent.SP_NO, nex)
                     }
                 }
                 tipDialog.show()

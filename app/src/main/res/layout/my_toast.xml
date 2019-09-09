@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/shape_dialog"
         android:paddingBottom="16dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:paddingTop="16dp"
         android:textColor="@color/title_white" />
 

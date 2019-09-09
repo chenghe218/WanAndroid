@@ -15,8 +15,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/ranking_coin"
         app:navigationIcon="@drawable/back"
+        app:title="@string/ranking_coin"
         app:titleTextColor="@color/title_white" />
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -34,6 +34,8 @@
             android:id="@+id/rvData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

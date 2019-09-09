@@ -49,18 +49,13 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initFragment()
-        //判断是否为切换白夜模式
-        if (savedInstanceState != null) {
-            switchFragment(mineFragment!!)
-            toolbar.title = getString(R.string.menu_main)
-        } else {
-            currentFragment = mineFragment
-            currentFragment?.let {
-                supportFragmentManager.beginTransaction().add(R.id.frameLayout, it, mineFragment?.javaClass?.name)
-                    .commit()
-            }
-            fragmentList.add(mineFragment!!)
+        currentFragment = mineFragment
+        currentFragment?.let {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.frameLayout, it, mineFragment?.javaClass?.name)
+                .commit()
         }
+        fragmentList.add(mineFragment!!)
 
         //主Activity不需要侧滑返回功能，其它Activity都采用仿小米侧滑返回效果
         SmartSwipeBack.activityBezierBack(application, { activity ->
@@ -130,14 +125,15 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                     if (mode) {
                         SPManager.saveBoolean2(applicationContext, SPContent.SP_MODE, false)
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                        navigationView.menu.findItem(R.id.drawer_mode).title = getString(R.string.drawer_mode_night)
+                        navigationView.menu.findItem(R.id.drawer_mode).title =
+                            getString(R.string.drawer_mode_night)
                     } else {
                         SPManager.saveBoolean2(applicationContext, SPContent.SP_MODE, true)
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                        navigationView.menu.findItem(R.id.drawer_mode).title = getString(R.string.drawer_mode_day)
+                        navigationView.menu.findItem(R.id.drawer_mode).title =
+                            getString(R.string.drawer_mode_day)
                     }
                     bottomNavigationView.selectedItemId = R.id.menu_main
-                    fragmentList.clear()
                     window.setWindowAnimations(R.style.WindowAnimationFadeInOut)
                     recreate()
                 }
@@ -164,11 +160,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("index", mIndex)
-    }
-
     private fun initFragment() {
         mineFragment ?: MainFragment().let {
             mineFragment = it
@@ -185,6 +176,28 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         navigationFragment ?: NavigationFragment().let {
             navigationFragment = it
         }
+    }
+
+    override fun recreate() {
+        supportFragmentManager.beginTransaction().run {
+            mineFragment?.let {
+                this.remove(it)
+            }
+            projectFragment?.let {
+                this.remove(it)
+            }
+            systemFragment?.let {
+                this.remove(it)
+            }
+            weChatFragment?.let {
+                this.remove(it)
+            }
+            navigationFragment?.let {
+                this.remove(it)
+            }
+            commitAllowingStateLoss()
+        }
+        super.recreate()
     }
 
 
