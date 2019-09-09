@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.leo.wan.R
+import kotlin.math.min
 
 /**
  * @Description:   悬浮置顶效果
@@ -63,7 +64,7 @@ class TopItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
             val top = parent.paddingTop.toFloat()
             val tag = tagListener(index)
             var bottom = parent.paddingTop + mHeight.toFloat()
-            bottom = Math.min(childView.bottom.toFloat(), bottom)
+            bottom = min(childView.bottom.toFloat(), bottom)
             c.drawRect(0f, top, right, bottom, mPaint)
             textPaint.getTextBounds(tag, 0, tag.length, mRound)
             c.drawText(tag, left + textPaint.textSize, bottom - mHeight / 2 + mRound.height() / 2, textPaint)

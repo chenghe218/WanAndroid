@@ -41,7 +41,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
 
     lateinit var tvCoin: TextView
     lateinit var tvRanking: TextView
-    private var mIndex = 0
     private var mode: Boolean = false
     private var firstTime: Long = 0
 
